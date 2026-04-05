@@ -1,113 +1,193 @@
-# Issue Tracking - Critical Fixes
+# Issue Tracking - Critical & High Priority Fixes
 
-**Last Updated:** April 5, 2026 14:55 UTC
+**Last Updated:** April 5, 2026 22:13 UTC
 
 ---
 
 ## 🔴 Critical Issues - GitHub Status
 
-| ID | GitHub Issue | Title | Status | Priority | Assignee |
-|----|--------------|-------|--------|----------|----------|
-| CRITICAL-001 | [#1263](https://github.com/RocketChat/EmbeddedChat/issues/1263) | Password Storage Vulnerability (CWE-312) | 🟡 IN PROGRESS | P0 | @me |
-| CRITICAL-002 | [#1264](https://github.com/RocketChat/EmbeddedChat/issues/1264) | Silent Promise Failures in Auth | 🔴 NEW | P0 | @me |
-| CRITICAL-003 | [#1265](https://github.com/RocketChat/EmbeddedChat/issues/1265) | Widespread 'any' type usage | 🔴 NEW | P0 | @me |
+| ID | GitHub Issue | Title | Status | Priority | PR |
+|----|--------------|-------|--------|----------|-----|
+| CRITICAL-001 | [#1263](https://github.com/RocketChat/EmbeddedChat/issues/1263) | Password Storage Vulnerability (CWE-312) | ✅ FIXED | P0 | [#1266](https://github.com/RocketChat/EmbeddedChat/pull/1266) |
+| CRITICAL-002 | [#1264](https://github.com/RocketChat/EmbeddedChat/issues/1264) | Silent Promise Failures in Auth | ✅ FIXED | P0 | [#1267](https://github.com/RocketChat/EmbeddedChat/pull/1267) |
+| CRITICAL-003 | [#1265](https://github.com/RocketChat/EmbeddedChat/issues/1265) | Widespread 'any' type usage | ✅ FIXED (Phase 1) | P0 | Clean PR pending |
+
+---
+
+## 🟠 High Priority Issues - GitHub Status
+
+| ID | GitHub Issue | Title | Status | Priority | PR |
+|----|--------------|-------|--------|----------|-----|
+| HIGH-001 | [#1270](https://github.com/RocketChat/EmbeddedChat/issues/1270) | Missing React Error Boundaries | 🟡 IN PROGRESS | P1 | Not created |
+| HIGH-002 | [#1271](https://github.com/RocketChat/EmbeddedChat/issues/1271) | React Version Fragmentation | 🔴 NEW | P1 | Not created |
 
 ---
 
 ## 📝 Fix Progress
 
-### Issue #1263 - Password Storage Vulnerability
+### ✅ Issue #1263 - Password Storage Vulnerability
+**Status:** ✅ FIXED  
+**PR:** [#1266](https://github.com/RocketChat/EmbeddedChat/pull/1266)  
+**Branch:** `fix/issue-1263-password-storage`  
+**Completed:** April 5, 2026
+
+**Changes Made:**
+- ✅ Removed password field from userStore (React and React Native)
+- ✅ Created ephemeral totpCredentialsStore for TOTP flow
+- ✅ Updated useRCAuth hook for auto-cleanup
+- ✅ Modified TotpModal to use ephemeral credentials
+- ✅ Added .gitignore protection for dev files
+
+**Files Modified:** 7 files
+
+---
+
+### ✅ Issue #1264 - Silent Promise Failures
+**Status:** ✅ FIXED  
+**PR:** [#1267](https://github.com/RocketChat/EmbeddedChat/pull/1267)  
+**Branch:** `fix/issue-1264-silent-errors`  
+**Completed:** April 5, 2026
+
+**Changes Made:**
+- ✅ Modified googleSSOLogin() to return error objects
+- ✅ Modified login() to return error objects for non-401 errors
+- ✅ Modified load() to re-throw errors for caller handling
+
+**Files Modified:** 2 files
+
+---
+
+### ✅ Issue #1265 - Type Safety (Phase 1)
+**Status:** ✅ FIXED (Clean PR pending)  
+**PR:** #1268 closed (workspace files), clean PR needed  
+**Branch:** `fix/issue-1265-type-safety-clean`  
+**Completed:** April 5, 2026
+
+**Changes Made:**
+- ✅ Created packages/api/src/types.ts (Message, User, ActionData interfaces)
+- ✅ Created packages/auth/src/types.ts (CurrentUser, AuthToken interfaces)
+- ✅ Fixed cloneArray to use generic types
+- ✅ Typed EmbeddedChatApi callbacks
+- ✅ Typed RocketChatAuth currentUser property
+
+**Files Modified:** 9 files  
+**Note:** Need to create clean PR without workspace files
+
+---
+
+### 🟡 Issue #1270 - Missing React Error Boundaries
 **Status:** 🟡 IN PROGRESS  
-**Timeline:** Fix within 24 hours  
-**Started:** April 5, 2026 14:55 UTC
+**Priority:** HIGH  
+**Timeline:** 2-4 hours  
+**Started:** April 5, 2026 22:13 UTC
 
-**Files to Modify:**
-- [ ] `packages/react/src/store/userStore.js` - Remove password field
-- [ ] `packages/react-native/src/store/userStore.js` - Remove password field
-- [ ] Audit components using password from store
-- [ ] Test login flow without password storage
-- [ ] Commit and push fix
+**Plan:**
+- [ ] Create ErrorBoundary component with fallback UI
+- [ ] Wrap application root in ErrorBoundary
+- [ ] Wrap critical sub-components (MessageList, ChatInput, etc.)
+- [ ] Add error logging
+- [ ] Test error boundary catches errors
+- [ ] Commit and push
 - [ ] Create Pull Request
 
-**Commits:** None yet
+**Files to Create:**
+- `packages/react/src/components/ErrorBoundary.jsx`
 
-**Pull Requests:** None yet
+**Files to Modify:**
+- `packages/react/src/views/EmbeddedChat.jsx` (or main entry point)
+- `packages/react/src/components/index.js` (export ErrorBoundary)
 
 ---
 
-### Issue #1264 - Silent Promise Failures
+### 🔴 Issue #1271 - React Version Fragmentation
 **Status:** 🔴 NEW  
-**Timeline:** Fix within 48 hours  
+**Priority:** HIGH  
+**Timeline:** 1-2 days  
 **Started:** Not started
 
-**Files to Modify:**
-- [ ] `packages/api/src/EmbeddedChatApi.ts` (lines 115-118, 145-147)
-- [ ] `packages/auth/src/RocketChatAuth.ts` (lines 199-201)
-- [ ] Add tests for error scenarios
-- [ ] Commit and push fix
+**Plan:**
+- [ ] Audit all package.json files for React versions
+- [ ] Identify React 18-specific code (if any)
+- [ ] Update all packages to React 18 peerDependencies
+- [ ] Update root rendering to use createRoot (if needed)
+- [ ] Run tests to verify compatibility
+- [ ] Verify single React instance with `yarn why react`
+- [ ] Check bundle size reduction
+- [ ] Commit and push
 - [ ] Create Pull Request
 
-**Commits:** None yet
-
-**Pull Requests:** None yet
-
----
-
-### Issue #1265 - Type Safety
-**Status:** 🔴 NEW  
-**Timeline:** Begin immediately, 1-2 weeks for critical paths  
-**Started:** Not started
-
 **Files to Modify:**
-- [ ] Define core interfaces (MessageData, UserData, etc.)
-- [ ] `packages/api/src/EmbeddedChatApi.ts` - Type callbacks
-- [ ] `packages/auth/src/RocketChatAuth.ts` - Type currentUser
-- [ ] `packages/api/src/cloneArray.ts` - Use generics
-- [ ] Phase 2: Remaining packages
-- [ ] Commit and push fix
-- [ ] Create Pull Request
-
-**Commits:** None yet
-
-**Pull Requests:** None yet
+- `packages/react/package.json`
+- `packages/ui-kit/package.json`
+- `packages/ui-elements/package.json`
+- `packages/markups/package.json`
+- `packages/htmlembed/package.json`
+- `packages/layout_editor/package.json`
+- `packages/e2e-react/package.json`
+- `packages/react-native/package.json`
+- Possibly rendering entry points if using ReactDOM.render
 
 ---
 
 ## 🚀 Deployment Pipeline
 
 ### Branch Strategy
-- **Development Branch:** `develop`
-- **Feature Branches:** `fix/issue-1263-password-storage`, `fix/issue-1264-silent-errors`, `fix/issue-1265-type-safety`
-- **Target Branch:** `develop`
+- **Main Branch:** `develop`
+- **Workspace Branch:** `local-workspace` (development files, never merged)
+- **Fix Branches:** Created from `develop`, NOT from `local-workspace`
+  - `fix/issue-1263-password-storage` ✅
+  - `fix/issue-1264-silent-errors` ✅
+  - `fix/issue-1265-type-safety-clean` ✅
+  - `fix/issue-1270-error-boundaries` 🟡 IN PROGRESS
+  - `fix/issue-1271-react-version` 🔴 NEXT
+
+### Workflow (Per Fix)
+1. Start on `local-workspace` - review issue
+2. `git checkout develop` - switch to clean base
+3. `git checkout -b fix/issue-XXXX-description` - create fix branch
+4. Implement fix, test, commit
+5. `git push -u fork fix/issue-XXXX-description`
+6. Create PR, verify no workspace files
+7. `git checkout local-workspace` - return to workspace
+8. Update issue-tracking.md
 
 ### PR Checklist (Per Issue)
-- [ ] All modified files committed
+- [ ] Branch created from clean `develop`
+- [ ] Only fix files committed (no .github/, .gsd/, memory/)
 - [ ] Commit message references GitHub issue
-- [ ] Tests added/updated
-- [ ] Code reviewed
-- [ ] PR created with proper description
+- [ ] Tests pass locally
+- [ ] Code follows project conventions
+- [ ] PR description clear and complete
+- [ ] PR linked to GitHub issue (Fixes #XXXX)
+- [ ] Verified no workspace files in PR
 - [ ] CI/CD checks passing
-- [ ] Merged to develop
 
 ---
 
 ## 📊 Statistics
 
-**Total Critical Issues:** 3  
-**Issues Created:** 3  
-**Issues In Progress:** 1  
-**Issues Completed:** 0  
-**Pull Requests:** 0  
+**Total Issues Tracked:** 5  
+**Critical Issues:** 3 (all fixed ✅)  
+**High Priority Issues:** 2 (1 in progress, 1 new)  
 
-**Completion:** 0% (0/3)
+**Pull Requests:**
+- ✅ #1266 - Password Storage (merged/pending)
+- ✅ #1267 - Silent Errors (merged/pending)  
+- ⏳ #1268 - Type Safety (closed, clean PR needed)
+- 🟡 #XXXX - Error Boundaries (in progress)
+- 🔴 Not created - React Version (not started)
+
+**Completion:**
+- Critical Issues: 100% (3/3) ✅
+- High Priority: 0% (0/2) 🟡
 
 ---
 
 ## 🎯 Current Focus
 
-**NOW:** Fixing Issue #1263 (Password Storage)  
-**NEXT:** Issue #1264 (Silent Promise Failures)  
-**THEN:** Issue #1265 (Type Safety - Phase 1)
+**NOW:** Fixing Issue #1270 (Error Boundaries)  
+**NEXT:** Issue #1271 (React Version Fragmentation)  
+**THEN:** Create clean PR for Issue #1265 (Type Safety)
 
 ---
 
